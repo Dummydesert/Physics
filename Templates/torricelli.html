@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Sistema Modelo{% endblock %}
+{% block page_content %}
+
+<form>
+    <div class="form-group">
+      <label for="V0_ipt">V0</label>
+      <input type="text" class="form-control" id="V0_ipt">
+    </div>
+    <div class="form-group">
+      <label for="a_ipt">a</label>
+      <input type="text" class="form-control" id="a_ipt">
+    </div>
+    <div class="form-group">
+      <label for="s">s</label>
+      <input type="text" class="form-control" id="s_ipt">
+    </div>
+    <button type="submit" class="btn btn-primary" onclick=control_support()>Submit</button>
+</form>
+
+
+<script>
+
+function control_support(){
+    var V0   = document.getElementById('V0_ipt');
+    var valor_campo1     = V0.value;
+
+    var a   = document.getElementById('a_ipt');
+    var valor_campo2     = a.value;
+
+    var s   = document.getElementById('s_ipt');
+    var valor_campo3     = s.value;
+
+    var msg = [{"meu_campo1": valor_campo1, "meu_campo2": valor_campo2, "meu_campo3": valor_campo3}];
+    // POST
+    fetch('/calc2',{
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify(msg),
+        cache: "no-cache",
+        headers: new Headers({
+        "content-type": "application/json"
+        })
+    })
+    .then(function (response) {
+        if (response.status !== 200) {
+        console.log("It looks like there was a problem. Status code: ${response.status}");
+        }
+        response.json().then(function (data) {
+        if (data.calculo){
+            alert("V=" + data.calculo);
+        }
+        });
+    })
+    .catch(function (error) {
+    console.log("Fetch error: " + error);
+    });
+}
+
+</script>
+
+{% endblock %}
